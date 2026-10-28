@@ -1,0 +1,28 @@
+CHORD_UniLab third-party provenance
+===================================
+
+UniLab
+------
+Project: https://github.com/Motphys/UniLab
+License: Apache License 2.0 (see LICENSE)
+
+The FlashSAC algorithms, asynchronous Torch collector/learner runtime, IPC,
+off-policy logging, environment/observation contracts, training lifecycle,
+Hydra entrypoints, and focused tests were derived from UniLab and are now
+maintained independently in CHORD_UniLab.
+
+Source revisions:
+  UniLab origin/main: ce1a3296
+  Reviewed integration snapshot: b5438e074f937cd593788c539f1131d9bb2dce16
+
+Built-in actor checkpoints retain the persisted schema identifier
+"unilab.rl.algos.flash_sac.network:FlashSACActor" for checkpoint compatibility.
+This identifier does not introduce a runtime dependency on unilab.rl.
+
+Historical lineage
+------------------
+
+Some runtime, placement, seed, and test module headers cite unilab_rl revision
+3654e4b (unilab-rl 1.4.15), licensed under Apache-2.0. Those files entered this
+project through UniLab's FlashSAC/runtime tree; the citation records their
+original provenance.

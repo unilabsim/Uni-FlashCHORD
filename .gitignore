@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+outputs/
+logs/
+wandb/
+*.log
+/docs/media/*
+!/docs/media/tissue_demo.gif
+MUJOCO_LOG.TXT

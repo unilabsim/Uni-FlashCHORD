@@ -1,0 +1,19 @@
+task:
+  parquet: ???
+  motion_speed: 0.5
+  motion_start_frame: 0
+  motion_end_frame: -1
+
+mode: voc1
+
+sim:
+  control_fps: 50
+  substeps: 4
+
+viewer:
+  backend: viser
+  port: 8080
+  start_paused: true
+
+record:
+  output: null

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "assets_root": "data/assets",
+  "sequences": [
+    {
+      "sequence_id": "tissue_box_simple",
+      "robot_name": "sharpa_wave",
+      "source_dataset": "ego_recon",
+      "parquet": "human_motion_data/ego_recon/processed/sequence_id=tissue_box_simple/robot_name=sharpa_wave/77ed746eca2449aeb395e51151f26d3c-0.parquet",
+      "parquet_sha256": "84f9b0aedd7ab254874d326885b7dc6f4611ccda7f54fbcb44691cb8f1f4f36c",
+      "object_assets": [
+        "human_motion_data/ego_recon/processed/tissue_box_simple_rigid.urdf",
+        "human_motion_data/ego_recon/processed/tissue_box_simple_visual.stl"
+      ],
+      "support": "human_motion_data/ego_recon/reconstructed_stage/tissue_box_simple_support.usda",
+      "asset_sha256": {
+        "human_motion_data/ego_recon/processed/tissue_box_simple_rigid.urdf": "5bb99237ff9c5a90a8c55b2ddb9c5a87303d1f88f0bf27ab5095766c85d3406a",
+        "human_motion_data/ego_recon/processed/tissue_box_simple_visual.stl": "6b574edc26b9660be238dfa9a429dd284826ba69bc8db2f9669e036eca1ae1e8",
+        "human_motion_data/ego_recon/reconstructed_stage/tissue_box_simple_support.usda": "2466fc57a25c4027b4f720bf11ebb381724d63437cecd57543d8b68315912a54"
+      },
+      "coacd_cache": {
+        "content_key": "2daf6f9482cb02d2",
+        "path": "data/reference/coacd/2daf6f9482cb02d2.npz",
+        "sha256": "1519f0158698d9c06292b615d7a357f657e732e573b5cc71b21eb8cea6d411c3",
+        "hull_count": 54,
+        "source": "flash_chord/src/flash_chord/assets/.cache/convex/2daf6f9482cb02d2.npz"
+      }
+    }
+  ]
+}

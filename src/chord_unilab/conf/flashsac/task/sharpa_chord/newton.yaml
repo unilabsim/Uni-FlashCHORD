@@ -1,0 +1,65 @@
+# @package _global_
+defaults:
+  - /task/sharpa_chord/base
+  - _self_
+
+training:
+  task_name: SharpaChordFlashSAC
+  sim_backend: newton
+  log_interval: 25
+  wandb_name: sharpa_flash_sac
+
+algo:
+  seed: 42
+  num_envs: 4096
+  batch_size: 2048
+  replay_buffer_n: 1024
+  updates_per_step: 8
+  learning_starts: 100
+  policy_frequency: 2
+  max_iterations: 61036
+  save_interval: 2500
+  gamma: 0.99
+  tau: 0.01
+  actor_lr: 0.0003
+  critic_lr: 0.0003
+  actor_hidden_dim: 256
+  critic_hidden_dim: 512
+  num_atoms: 101
+  algo_params:
+    normalize_reward: true
+    normalized_g_max: 5.0
+    actor_num_blocks: 2
+    critic_num_blocks: 2
+    actor_bc_alpha: 0.0
+    actor_noise_zeta_mu: 2.0
+    actor_noise_zeta_max: 16
+    actor_config:
+      builder: "chord_unilab.rl.flash_sac_actor:build_actor"
+      kwargs:
+        hidden_dim: 256
+        num_blocks: 2
+        expansion: 4
+        initial_normalized_std: 0.1
+        log_std_min: -10.0
+        log_std_max: -1.8971199848858813
+        noise_zeta_mu: 2.0
+        noise_zeta_max: 16
+        rms_norm_eps: 0.000001
+      optimizer_param_groups:
+        residual_mean:
+          parameters: [predictor.mean_w.gain, predictor.mean_bias]
+          lr_multiplier: 0.1
+    temp_initial_value: 0.01
+    temp_target_sigma: 0.1
+    learning_rate_init: 0.0003
+    learning_rate_peak: 0.0003
+    learning_rate_end: 0.00015
+    learning_rate_warmup_steps: 1
+    learning_rate_decay_steps: 488288
+    n_step: 3
+    relabel_rewards: true
+    compact_critic_replay: true
+    amp_dtype: fp16
+    dp_whole_cycle_cuda_graph: false
+    use_whole_cycle_cuda_graph: true

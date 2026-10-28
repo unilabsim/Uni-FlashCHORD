@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="right_sharpa_wave">
+  <compiler angle="radian" />
+
+  <asset>
+    <mesh name="right_hand_C_MC_visual_" file="../meshes/right_cvx/right_hand_C_MC_visual_.STL" />
+    <mesh name="right_hand_C_MC_cut" file="../meshes/right_cvx/right_hand_C_MC_cut.STL" />
+    <mesh name="right_thumb_CMC_VL_visual" file="../meshes/right_cvx/right_thumb_CMC_VL_visual.STL" />
+    <mesh name="right_thumb_MC_visual" file="../meshes/right_cvx/right_thumb_MC_visual.STL" />
+    <mesh name="right_thumb_MC_cut" file="../meshes/right_cvx/right_thumb_MC_cut.STL" />
+    <mesh name="right_thumb_MCP_VL_visual" file="../meshes/right_cvx/right_thumb_MCP_VL_visual.STL" />
+    <mesh name="right_thumb_PP_visual" file="../meshes/right_cvx/right_thumb_PP_visual.STL" />
+    <mesh name="right_thumb_PP" file="../meshes/right_cvx/right_thumb_PP.STL" />
+    <mesh name="right_thumb_DP_visual" file="../meshes/right_cvx/right_thumb_DP_visual.STL" />
+    <mesh name="right_thumb_DP" file="../meshes/right_cvx/right_thumb_DP.STL" />
+    <mesh name="thumb_elastomer_surface" file="../meshes/right_cvx/thumb_elastomer_surface.STL" />
+    <mesh name="thumb_elastomer" file="../meshes/right_cvx/thumb_elastomer.STL" />
+    <mesh name="right_MCP_VL_visual" file="../meshes/right_cvx/right_MCP_VL_visual.STL" />
+    <mesh name="MCP_VL" file="../meshes/right_cvx/MCP_VL.STL" />
+    <mesh name="right_PP_visual" file="../meshes/right_cvx/right_PP_visual.STL" />
+    <mesh name="right_PP" file="../meshes/right_cvx/right_PP.STL" />
+    <mesh name="right_MP_visual" file="../meshes/right_cvx/right_MP_visual.STL" />
+    <mesh name="right_MP" file="../meshes/right_cvx/right_MP.STL" />
+    <mesh name="right_DP_visual" file="../meshes/right_cvx/right_DP_visual.STL" />
+    <mesh name="right_DP" file="../meshes/right_cvx/right_DP.STL" />
+    <mesh name="elastomer_surface" file="../meshes/right_cvx/elastomer_surface.STL" />
+    <mesh name="elastomer" file="../meshes/right_cvx/elastomer.STL" />
+    <mesh name="right_pinky_MC_visual" file="../meshes/right_cvx/right_pinky_MC_visual.STL" />
+    <mesh name="right_pinky_MC" file="../meshes/right_cvx/right_pinky_MC.STL" />
+  </asset>
+
+  <worldbody>
+    <body name="right_hand_C_MC"><!-- inertial restored from the URDF root link (MuJoCo's URDF parser discards it); ball wrist joint added per flash_chord SharpaHands._add_hand (base_joint=BALL) --><inertial pos="-0.00216 0.00536 0.04011" mass="0.6506" fullinertia="0.000674254 0.000793354 0.000294753 2.498e-06 -7.348e-06 -0.000105749" /><joint name="right_wrist_rotvec" type="ball" armature="0.01" frictionloss="0.01" damping="6.0" /><geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_hand_C_MC_visual_" />
+    <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_hand_C_MC_cut" />
+    <body name="right_thumb_CMC_VL" pos="0.01 0.026 0.0214" quat="-2.59734e-06 0.707105 0.707108 -2.59735e-06">
+      <inertial pos="-0.00065 0.0002 0" quat="0.434754 0.557664 -0.434754 0.557664" mass="0.0025" diaginertia="2.6e-07 2.12661e-07 1.34339e-07" />
+      <joint name="right_thumb_CMC_FE" pos="0 0 0" axis="0 0 1" range="-0.1745 1.9199" actuatorfrcrange="-3.3 3.3" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_thumb_CMC_VL_visual" />
+      <body name="right_thumb_MC" pos="0 -0.005 0" quat="0.65328 -0.653282 0.270598 0.270599">
+        <inertial pos="0.03643 -0.01024 0.00517" quat="-0.151259 0.696943 -0.154462 0.683763" mass="0.13587" diaginertia="4.69153e-05 4.29066e-05 1.92101e-05" />
+        <joint name="right_thumb_CMC_AA" pos="0 0 0" axis="0 0 1" range="-0.3491 0.3491" actuatorfrcrange="-3.3 3.3" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.8902 0.8902 0.91373 1" mesh="right_thumb_MC_visual" />
+        <geom type="mesh" rgba="0.8902 0.8902 0.91373 1" mesh="right_thumb_MC_cut" />
+        <body name="right_thumb_MCP_VL" pos="0.065 -0.006 0.010392" quat="0.965926 0.25882 0 0">
+          <inertial pos="-1.29e-09 -1.1e-10 0" quat="0.515163 0.484363 -0.515163 0.484363" mass="8e-05" diaginertia="7.9e-08 6.40993e-08 3.79007e-08" />
+          <joint name="right_thumb_MCP_FE" pos="0 0 0" axis="0 0 1" range="-0.5236 1.3963" actuatorfrcrange="-1.864 1.864" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_thumb_MCP_VL_visual" />
+          <body name="right_thumb_PP" quat="0.707105 -0.707108 0 0">
+            <inertial pos="0.021256 -0.00095 -0.00092" quat="0.44358 0.511613 0.483631 0.554609" mass="0.03078" diaginertia="6.08344e-06 5.91207e-06 1.22148e-06" />
+            <joint name="right_thumb_MCP_AA" pos="0 0 0" axis="0 0 1" range="-0.3491 0.3491" actuatorfrcrange="-1.864 1.864" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_thumb_PP_visual" />
+            <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_thumb_PP" />
+            <body name="right_thumb_DP" pos="0.039 0 0" quat="0.707105 0.707108 0 0">
+              <inertial pos="0.00832 -0.0018 -0.00101" quat="-0.259428 0.713295 -0.189108 0.623014" mass="0.00788" diaginertia="1.08299e-06 1.03423e-06 2.94236e-07" />
+              <joint name="right_thumb_IP" pos="0 0 0" axis="0 0 1" range="0 1.7453" actuatorfrcrange="-0.638 0.638" />
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_thumb_DP_visual" />
+              <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_thumb_DP" />
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.2 1 0.2 1" mesh="thumb_elastomer_surface" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+              <geom type="mesh" rgba="0.2 1 0.2 1" mesh="thumb_elastomer" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="right_index_MCP_VL" pos="0.001 0.0303 0.0959" quat="0.499998 -0.500002 -0.5 -0.5">
+      <inertial pos="-0.0092 0.0013 0" quat="0.519686 0.479506 -0.519686 0.479506" mass="0.00221" diaginertia="2.23e-07 1.77435e-07 1.09965e-07" />
+      <joint name="right_index_MCP_FE" pos="0 0 0" axis="0 0 1" range="-0.174533 1.5708" actuatorfrcrange="-1.864 1.864" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MCP_VL_visual" />
+      <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="MCP_VL" />
+      <body name="right_index_PP" quat="0.707105 -0.707108 0 0">
+        <inertial pos="0.027 0.00055 0.00068" quat="0.512565 0.504813 0.502719 0.479286" mass="0.04741" diaginertia="1.14061e-05 1.10467e-05 2.15425e-06" />
+        <joint name="right_index_MCP_AA" pos="0 0 0" axis="0 0 1" range="-0.3491 0.3491" actuatorfrcrange="-1.864 1.864" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP_visual" />
+        <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP" />
+        <body name="right_index_MP" pos="0.047 0 0" quat="0.707105 0.707108 0 0">
+          <inertial pos="0.01212 -0.00116 0.00058" quat="-0.0266408 0.732558 -0.0189273 0.67992" mass="0.01824" diaginertia="2.00683e-06 1.9229e-06 5.68878e-07" />
+          <joint name="right_index_PIP" pos="0 0 0" axis="0 0 1" range="0 1.7453" actuatorfrcrange="-0.638 0.638" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP_visual" />
+          <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP" />
+          <body name="right_index_DP" pos="0.0315 0 0">
+            <inertial pos="0.01276 -0.00263 -0.00011" quat="-0.0686937 0.716918 -0.0647319 0.690739" mass="0.00455" diaginertia="2.98494e-07 2.93487e-07 1.3407e-07" />
+            <joint name="right_index_DIP" pos="0 0 0" axis="0 0 1" range="0 1.3963" actuatorfrcrange="-0.189369 0.189369" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP_visual" />
+            <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.2 1 0.2 1" mesh="elastomer_surface" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+            <geom type="mesh" rgba="0.2 1 0.2 1" mesh="elastomer" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="right_middle_MCP_VL" pos="0 0.01 0.0989" quat="0.499998 -0.500002 -0.5 -0.5">
+      <inertial pos="-0.0092 0.0013 0" quat="0.519686 0.479506 -0.519686 0.479506" mass="0.00221" diaginertia="2.23e-07 1.77435e-07 1.09965e-07" />
+      <joint name="right_middle_MCP_FE" pos="0 0 0" axis="0 0 1" range="-0.174533 1.5708" actuatorfrcrange="-1.864 1.864" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MCP_VL_visual" />
+      <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="MCP_VL" />
+      <body name="right_middle_PP" quat="0.707105 -0.707108 0 0">
+        <inertial pos="0.027 0.00055 0.00068" quat="0.512565 0.504813 0.502719 0.479286" mass="0.04741" diaginertia="1.14061e-05 1.10467e-05 2.15425e-06" />
+        <joint name="right_middle_MCP_AA" pos="0 0 0" axis="0 0 1" range="-0.3491 0.3491" actuatorfrcrange="-1.864 1.864" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP_visual" />
+        <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP" />
+        <body name="right_middle_MP" pos="0.047 0 0" quat="0.707105 0.707108 0 0">
+          <inertial pos="0.01212 -0.00116 0.00058" quat="-0.0266408 0.732558 -0.0189273 0.67992" mass="0.01824" diaginertia="2.00683e-06 1.9229e-06 5.68878e-07" />
+          <joint name="right_middle_PIP" pos="0 0 0" axis="0 0 1" range="0 1.7453" actuatorfrcrange="-0.638 0.638" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP_visual" />
+          <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP" />
+          <body name="right_middle_DP" pos="0.0315 0 0">
+            <inertial pos="0.01276 -0.00263 -0.00011" quat="-0.0686937 0.716918 -0.0647319 0.690739" mass="0.00455" diaginertia="2.98494e-07 2.93487e-07 1.3407e-07" />
+            <joint name="right_middle_DIP" pos="0 0 0" axis="0 0 1" range="0 1.3963" actuatorfrcrange="-0.189369 0.189369" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP_visual" />
+            <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.2 1 0.2 1" mesh="elastomer_surface" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+            <geom type="mesh" rgba="0.2 1 0.2 1" mesh="elastomer" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="right_ring_MCP_VL" pos="0.0015 -0.0103 0.0929" quat="0.499998 -0.500002 -0.5 -0.5">
+      <inertial pos="-0.0092 0.0013 0" quat="0.519686 0.479506 -0.519686 0.479506" mass="0.00221" diaginertia="2.23e-07 1.77435e-07 1.09965e-07" />
+      <joint name="right_ring_MCP_FE" pos="0 0 0" axis="0 0 1" range="-0.174533 1.5708" actuatorfrcrange="-1.864 1.864" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MCP_VL_visual" />
+      <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="MCP_VL" />
+      <body name="right_ring_PP" quat="0.707105 -0.707108 0 0">
+        <inertial pos="0.027 0.00055 0.00068" quat="0.512565 0.504813 0.502719 0.479286" mass="0.04741" diaginertia="1.14061e-05 1.10467e-05 2.15425e-06" />
+        <joint name="right_ring_MCP_AA" pos="0 0 0" axis="0 0 1" range="-0.3491 0.3491" actuatorfrcrange="-1.864 1.864" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP_visual" />
+        <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP" />
+        <body name="right_ring_MP" pos="0.047 0 0" quat="0.707105 0.707108 0 0">
+          <inertial pos="0.01212 -0.00116 0.00058" quat="-0.0266408 0.732558 -0.0189273 0.67992" mass="0.01824" diaginertia="2.00683e-06 1.9229e-06 5.68878e-07" />
+          <joint name="right_ring_PIP" pos="0 0 0" axis="0 0 1" range="0 1.7453" actuatorfrcrange="-0.638 0.638" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP_visual" />
+          <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP" />
+          <body name="right_ring_DP" pos="0.0315 0 0">
+            <inertial pos="0.01276 -0.00263 -0.00011" quat="-0.0686937 0.716918 -0.0647319 0.690739" mass="0.00455" diaginertia="2.98494e-07 2.93487e-07 1.3407e-07" />
+            <joint name="right_ring_DIP" pos="0 0 0" axis="0 0 1" range="0 1.3963" actuatorfrcrange="-0.189369 0.189369" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP_visual" />
+            <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.2 1 0.2 1" mesh="elastomer_surface" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+            <geom type="mesh" rgba="0.2 1 0.2 1" mesh="elastomer" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="right_pinky_MC" pos="0.01136 -0.0263 0.0869" quat="-3.67321e-06 0 0 1">
+      <inertial pos="0.0107985 0.00598801 -0.0335125" quat="0.709657 -0.106152 -0.0812795 0.691746" mass="0.12541" diaginertia="3.57685e-05 2.46485e-05 2.14424e-05" />
+      <joint name="right_pinky_CMC" pos="0 0 0" axis="0 0 1" range="0 0.2618" actuatorfrcrange="-0.5285 0.5285" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_pinky_MC_visual" />
+      <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_pinky_MC" />
+      <body name="right_pinky_MCP_VL" pos="0.00836 0.0048 0" quat="0.499998 0.5 -0.5 0.500002">
+        <inertial pos="-0.0092 0.0013 0" quat="0.519686 0.479506 -0.519686 0.479506" mass="0.00221" diaginertia="2.23e-07 1.77435e-07 1.09965e-07" />
+        <joint name="right_pinky_MCP_FE" pos="0 0 0" axis="0 0 1" range="-0.174533 1.5708" actuatorfrcrange="-1.864 1.864" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MCP_VL_visual" />
+        <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="MCP_VL" />
+        <body name="right_pinky_PP" quat="0.707105 -0.707108 0 0">
+          <inertial pos="0.027 0.00055 0.00068" quat="0.512565 0.504813 0.502719 0.479286" mass="0.04741" diaginertia="1.14061e-05 1.10467e-05 2.15425e-06" />
+          <joint name="right_pinky_MCP_AA" pos="0 0 0" axis="0 0 1" range="-0.3491 0.3491" actuatorfrcrange="-1.864 1.864" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP_visual" />
+          <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_PP" />
+          <body name="right_pinky_MP" pos="0.047 0 0" quat="0.707105 0.707108 0 0">
+            <inertial pos="0.01212 -0.00116 0.00058" quat="-0.0266408 0.732558 -0.0189273 0.67992" mass="0.01824" diaginertia="2.00683e-06 1.9229e-06 5.68878e-07" />
+            <joint name="right_pinky_PIP" pos="0 0 0" axis="0 0 1" range="0 1.7453" actuatorfrcrange="-0.638 0.638" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP_visual" />
+            <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_MP" />
+            <body name="right_pinky_DP" pos="0.0315 0 0">
+              <inertial pos="0.01276 -0.00263 -0.00011" quat="-0.0686937 0.716918 -0.0647319 0.690739" mass="0.00455" diaginertia="2.98494e-07 2.93487e-07 1.3407e-07" />
+              <joint name="right_pinky_DIP" pos="0 0 0" axis="0 0 1" range="0 1.3963" actuatorfrcrange="-0.189369 0.189369" />
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP_visual" />
+              <geom type="mesh" rgba="0.79216 0.81961 0.93333 1" mesh="right_DP" />
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.1 1 0.2 1" mesh="elastomer_surface" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+              <geom type="mesh" rgba="0.1 1 0.2 1" mesh="elastomer" pos="0 0 0" quat="0.499998163 0.5 -0.5 0.500001837" />
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </body></worldbody>
+</mujoco>

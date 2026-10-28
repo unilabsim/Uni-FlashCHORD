@@ -1,0 +1,125 @@
+# @package _global_
+# Canonical floating Sharpa-hand FlashChord reference-tracking task.
+env:
+  seed: 42
+  scene:
+    _target_: chord_unilab.tasks.sharpa_chord.scene.SharpaSceneCfg
+    reference_path: ???
+    motion_speed: 0.5
+    motion_start_frame: 0
+    motion_end_frame: -1
+    include_support: true
+    include_floor: true
+  sim_dt: 0.01
+  ctrl_dt: 0.05
+  newton_device: cuda:0
+  newton_njmax: 512
+  newton_nconmax: 256
+  max_episode_seconds: 1000000000.0
+  scale_rewards_by_dt: true
+  observations:
+    actor:
+      terms:
+        policy:
+          func: chord_unilab.tasks.sharpa_chord.observations.PolicyObservation
+          params: {command_name: reference}
+    critic:
+      terms:
+        policy:
+          func: chord_unilab.tasks.sharpa_chord.observations.PolicyObservation
+          params: {command_name: reference}
+        reset_context:
+          func: chord_unilab.tasks.sharpa_chord.observations.critic_context
+          params: {command_name: reference}
+  actions:
+    residual_hand_pose:
+      _target_: chord_unilab.tasks.sharpa_chord.actions.ResidualHandPoseActionCfg
+      entity_name: left_hand
+      command_name: reference
+      wrist_pos_scale: 0.05
+      wrist_ori_scale: 0.15
+      finger_joint_pos_scale: 0.15
+      wrist_pos_clip: 0.2
+      wrist_ori_clip: 1.0
+      finger_joint_pos_clip: 1.0
+      ema: 0.3
+      wrist_kp: 25.0
+      wrist_tau_max: 45.0
+  commands:
+    reference:
+      _target_: chord_unilab.tasks.sharpa_chord.commands.ReferenceCommandCfg
+      resampling_time_range: [1.0e9, 1.0e9]
+      voc_decay_steps: 20
+      reset_finger_openness: 0.7
+      reset_to_first_frame_probability: 0.1
+      first_frame_voc_threshold: 0.1
+      curriculum_enabled: true
+      initial_voc_scale: 1.0
+      always_reset_to_first_frame: false
+  reset_owners:
+    reference:
+      _target_: chord_unilab.tasks.sharpa_chord.env.ReferenceResetOwnerCfg
+      func: chord_unilab.tasks.sharpa_chord.env.ReferenceResetOwner
+      command_name: reference
+      owns_command_reset: true
+      owns_action_reset: true
+      owns_observation_reset: false
+      owns_metric_reset: true
+  curriculum:
+    voc:
+      func: chord_unilab.tasks.sharpa_chord.commands.voc_curriculum
+      params: {command_name: reference}
+  terminations:
+    wrist_position:
+      func: chord_unilab.tasks.sharpa_chord.terminations.TrackingTermination
+      params: {kind: wrist_position, command_name: reference}
+    object_position:
+      func: chord_unilab.tasks.sharpa_chord.terminations.TrackingTermination
+      params: {kind: object_position, command_name: reference}
+    object_orientation:
+      func: chord_unilab.tasks.sharpa_chord.terminations.TrackingTermination
+      params: {kind: object_orientation, command_name: reference}
+    reference_end:
+      func: chord_unilab.tasks.sharpa_chord.terminations.reference_end
+      time_out: true
+      params: {command_name: reference}
+  policy_observation_group: actor
+  critic_observation_group: critic
+
+reward:
+  object_keypoints:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: 20.0
+    params: {term_name: object_keypoints, command_name: reference}
+  hand_keypoints:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: 0.25
+    params: {term_name: hand_keypoints, command_name: reference}
+  hand_joint_pos:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: 0.25
+    params: {term_name: hand_joint_pos, command_name: reference}
+  contact_wrench_support:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: 10.0
+    params: {term_name: contact_wrench_support, command_name: reference}
+  missed_contact:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: -1.0
+    params: {term_name: missed_contact, command_name: reference}
+  unintended_contact:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: -10.0
+    params: {term_name: unintended_contact, command_name: reference}
+  termination:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: -100.0
+    params: {term_name: termination, command_name: reference}
+  action_rate_l2:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: -0.005
+    params: {term_name: action_rate_l2, command_name: reference}
+  action_l2:
+    func: chord_unilab.tasks.sharpa_chord.rewards.SharpaRewardTerm
+    weight: -0.002
+    params: {term_name: action_l2, command_name: reference}
