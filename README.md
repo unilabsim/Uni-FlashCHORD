@@ -29,7 +29,7 @@ retargeting 复现项目。它将 ManoSharpaData 参考序列重定向到悬浮�
 - 正式训练建议使用 48 GiB 级 GPU。
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/unilabsim/CHORD_UniLab.git
 cd CHORD_UniLab
 git lfs pull
 uv sync
