@@ -117,6 +117,7 @@ class SharpaSceneCfg(SceneCfg):
     motion_end_frame: int = -1
     include_support: bool = True
     include_floor: bool = True
+    deferred_contact_publication: bool = False
     reference: ChordReference = field(init=False)
     assembly: SharpaSceneAssembly = field(init=False)
 

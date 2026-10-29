@@ -7,16 +7,19 @@ from typing import Any, cast
 import numpy as np
 import torch
 from omegaconf import OmegaConf
+from unisim import BodyPairContactData
 
 from chord_unilab.tasks.sharpa_chord.commands import (
     ReferenceCommand,
     body_com_offsets,
 )
+from chord_unilab.tasks.sharpa_chord.contacts import ContactTracker
 from chord_unilab.tasks.sharpa_chord.math import conjugate, from_euler_xyz, multiply
 from chord_unilab.tasks.sharpa_chord.observations import (
     PolicyObservation,
     critic_context,
 )
+from chord_unilab.tasks.sharpa_chord.scene import POLICY_SIDES, contact_sensor_name
 
 
 def _observation():
@@ -192,3 +195,34 @@ def test_body_com_offsets_preserve_env_and_variant_rows() -> None:
             ]
         ),
     )
+
+
+def test_contact_read_refreshes_bound_views_through_public_api() -> None:
+    calls: list[str] = []
+
+    def get_sensor_view(name: str) -> BodyPairContactData:
+        calls.append(name)
+        return BodyPairContactData(
+            active=torch.ones(1, dtype=torch.bool),
+            count=torch.ones(1, dtype=torch.int32),
+            position_w=torch.zeros(1, 3),
+            force_w=torch.zeros(1, 3),
+        )
+
+    env = SimpleNamespace(backend=SimpleNamespace(get_sensor_view=get_sensor_view))
+    scene = SimpleNamespace(
+        reference=SimpleNamespace(object_body_names=lambda: ("box",))
+    )
+    tracker = ContactTracker(cast(Any, env), cast(Any, scene))
+    assert len(calls) == 34
+
+    result = tracker.read(
+        torch.zeros(1, 2, 3),
+        torch.ones(1, 2, 4),
+        torch.zeros(1, 1, 3),
+        torch.ones(1, 1, 4),
+    )
+
+    assert calls[-1] == contact_sensor_name(POLICY_SIDES[0], 0, 0)
+    assert len(calls) == 35
+    assert result.active.shape == (1, 2, 1, 17)

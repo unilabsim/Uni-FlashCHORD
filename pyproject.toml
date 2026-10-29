@@ -7,8 +7,8 @@ requires-python = ">=3.11,<3.14"
 license = "Apache-2.0"
 license-files = ["LICENSE", "THIRD_PARTY_NOTICES"]
 dependencies = [
-    "unilab[newton]==1.5.2",
-    "unisim-core[newton]==2.2.2",
+    "unilab[newton]==1.5.3",
+    "unisim-core[newton]==2.2.4",
     # ChordReferenceLoader: direct parquet read (pyarrow) and SLERP resampling
     # (scipy), mirroring flash_chord's loader dependencies.
     "pyarrow",
@@ -28,6 +28,8 @@ dependencies = [
     "rich",
     "tensorboard>=2.21.0",
     "wandb>=0.22.3",
+    "onnx",
+    "onnxscript",
     "onnxruntime<1.20 ; python_version < '3.11'",
     "onnxruntime>=1.20 ; python_version >= '3.11'",
     "setuptools",
@@ -53,14 +55,11 @@ explicit = true
 torch = [
     { index = "r2-cu130", marker = "sys_platform=='linux' or sys_platform=='win32'" },
 ]
-# UniLab 1.5.2 does not yet include the required environment fixes. Pin the
-# merged upstream commit until a release contains it.
-unilab = { git = "https://github.com/Motphys/UniLab.git", rev = "5df76930883889c9bc4ae4ac0edce7555b8c4931" }
 
 [tool.uv]
-# UniLab still pins UniSim 2.2.0; CHORD requires the public API released in
-# UniSim 2.2.2. Remove this override when UniLab updates its dependency pin.
-override-dependencies = ["unisim-core==2.2.2"]
+# UniLab still pins an older UniSim; CHORD requires the public API released in
+# UniSim 2.2.4. Remove this override when UniLab updates its dependency pin.
+override-dependencies = ["unisim-core==2.2.4"]
 
 [build-system]
 requires = ["hatchling"]

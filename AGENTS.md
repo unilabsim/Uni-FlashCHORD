@@ -1,4 +1,4 @@
-# CHORD_UniLab Agent Guide
+# Uni-FlashCHORD Agent Guide
 
 本文件记录长期仓库事实与维护约束。保持简短，不记录当前分支、SHA、PR 状态或
 临时验收结果；这些信息由专门文档维护。

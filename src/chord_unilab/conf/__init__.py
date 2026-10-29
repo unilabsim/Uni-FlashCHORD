@@ -1,1 +1,1 @@
-"""Hydra configuration package for CHORD_UniLab."""
+"""Hydra configuration package for Uni-FlashCHORD."""

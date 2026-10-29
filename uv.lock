@@ -11,7 +11,7 @@ resolution-markers = [
 ]
 
 [manifest]
-overrides = [{ name = "unisim-core", specifier = "==2.2.2" }]
+overrides = [{ name = "unisim-core", specifier = "==2.2.4" }]
 
 [[package]]
 name = "absl-py"
@@ -202,7 +202,9 @@ dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "omegaconf" },
+    { name = "onnx" },
     { name = "onnxruntime" },
+    { name = "onnxscript" },
     { name = "pyarrow" },
     { name = "rich" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
@@ -239,8 +241,10 @@ requires-dist = [
     { name = "ninja", marker = "sys_platform == 'linux'" },
     { name = "numpy" },
     { name = "omegaconf" },
+    { name = "onnx" },
     { name = "onnxruntime", marker = "python_full_version < '3.11'", specifier = "<1.20" },
     { name = "onnxruntime", marker = "python_full_version >= '3.11'", specifier = ">=1.20" },
+    { name = "onnxscript" },
     { name = "pyarrow" },
     { name = "rich" },
     { name = "scipy" },
@@ -249,8 +253,8 @@ requires-dist = [
     { name = "torch", marker = "sys_platform != 'linux' and sys_platform != 'win32'", specifier = ">=2.9,<2.15" },
     { name = "torch", marker = "sys_platform == 'linux' or sys_platform == 'win32'", specifier = ">=2.9,<2.15", index = "https://download-r2.pytorch.org/whl/cu130" },
     { name = "trimesh" },
-    { name = "unilab", extras = ["newton"], git = "https://github.com/Motphys/UniLab.git?rev=5df76930883889c9bc4ae4ac0edce7555b8c4931" },
-    { name = "unisim-core", extras = ["newton"], specifier = "==2.2.2" },
+    { name = "unilab", extras = ["newton"], specifier = "==1.5.3" },
+    { name = "unisim-core", extras = ["newton"], specifier = "==2.2.4" },
     { name = "usd-core", specifier = "==26.5" },
     { name = "viser", specifier = ">=1.0.26" },
     { name = "wandb", specifier = ">=0.22.3" },
@@ -671,30 +675,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/77/cd/9be253869fc42e764de7f3dedd6969af7d44ff9c3375214a3442a6f3fc08/fsspec-2026.9.0.tar.gz", hash = "sha256:0f08147951c8cb31d844c3547d631053b127863b60be04cf06e121333ee0e2fe", size = 333545, upload-time = "2026-09-18T17:50:42.825Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6c/c0/a98505f18594f1bce828bb159cec0fcf9860562f1a2c85913409fc8f3d9e/fsspec-2026.9.0-py3-none-any.whl", hash = "sha256:8dd6e646e99ea382bd85f97a45e6b526a442d79423a7dc673f1e2756d05fcb5f", size = 221738, upload-time = "2026-09-18T17:50:41.341Z" },
-]
-
-[[package]]
-name = "gitdb"
-version = "4.0.12"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "smmap" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/72/94/63b0fc47eb32792c7ba1fe1b694daec9a63620db1e313033d18140c2320a/gitdb-4.0.12.tar.gz", hash = "sha256:5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571", size = 394684, upload-time = "2025-01-02T07:20:46.413Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/61/5c78b91c3143ed5c14207f463aecfc8f9dbb5092fb2869baf37c273b2705/gitdb-4.0.12-py3-none-any.whl", hash = "sha256:67073e15955400952c6565cc3e707c554a4eea2e428946f7a4c162fab9bd9bcf", size = 62794, upload-time = "2025-01-02T07:20:43.624Z" },
-]
-
-[[package]]
-name = "gitpython"
-version = "3.2.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "gitdb" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c0/ff/fee293f1ec3e1b64db6eb270e00964f29c086d769201474cedb8d1608930/gitpython-3.2.1.tar.gz", hash = "sha256:0f1229ec5c057bdabdeeda8bda4f17bda679ab33dbccc00f24e6a480553c8613", size = 241688, upload-time = "2026-10-14T12:20:20.589Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/50/2a923c4dc02522ff9567f07c67ed1deca6d5fa9474f4708168b8088dfa37/gitpython-3.2.1-py3-none-any.whl", hash = "sha256:d66b0832aa8755c1a84892937282df0befb16c97e5a64aeebd68be9c5e323f53", size = 231548, upload-time = "2026-10-14T12:20:18.844Z" },
 ]
 
 [[package]]
@@ -2504,15 +2484,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pyvers"
-version = "0.2.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/62/21/9daf8da2793d112a04b46ac33ab9046c91b0af8292cd93b3cfdd07ff7169/pyvers-0.2.3.tar.gz", hash = "sha256:c4b81c3a033963245e124cdecb052783c9c4cea3bb08c051833af1c44faa6283", size = 12347, upload-time = "2026-07-09T13:58:07.046Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2d/8d/63787e8feda59d981ebc953b6581ccab3c97cf7bfe0a6a407c07b50fc86c/pyvers-0.2.3-py3-none-any.whl", hash = "sha256:6f5b5612f2f4bd08caa49baa70fc5f875fc7da701a5385c13e244eea6b8114dd", size = 11757, upload-time = "2026-07-09T13:58:06.078Z" },
-]
-
-[[package]]
 name = "pyyaml"
 version = "6.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -2575,26 +2546,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e9/67/cae617f1351490c25a4b8ac3b8b63a4dda609295d8222bad12242dfdc629/rich-14.3.4.tar.gz", hash = "sha256:817e02727f2b25b40ef56f5aa2217f400c8489f79ca8f46ea2b70dd5e14558a9", size = 230524, upload-time = "2026-04-11T02:57:45.419Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/76/6d163cfac87b632216f71879e6b2cf17163f773ff59c00b5ff4900a80fa3/rich-14.3.4-py3-none-any.whl", hash = "sha256:07e7adb4690f68864777b1450859253bed81a99a31ac321ac1817b2313558952", size = 310480, upload-time = "2026-04-11T02:57:47.484Z" },
-]
-
-[[package]]
-name = "rsl-rl-lib"
-version = "5.5.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "gitpython" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "onnx" },
-    { name = "onnxscript" },
-    { name = "tensorboard" },
-    { name = "tensordict" },
-    { name = "torch", version = "2.14.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "torch", version = "2.14.1+cu130", source = { registry = "https://download-r2.pytorch.org/whl/cu130" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/97/0e/142a31e8124255ec9276516c49c6fbe1497f2146ea384a92b81d23e3c525/rsl_rl_lib-5.5.1.tar.gz", hash = "sha256:50129065b35c69735ea197343321145a400af8c1b5fe9a28116fdaf1890fab43", size = 68077, upload-time = "2026-09-09T11:28:51.656Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f7/d3/0d4d446c61cb61377802c9e4366cfab8a6c378b9dbcaaad376dcc152c03c/rsl_rl_lib-5.5.1-py3-none-any.whl", hash = "sha256:bdb6382e21c62ddc2b47a37f39318486d0dfde234c7d446bfd42be482ecbd6ea", size = 100035, upload-time = "2026-09-09T11:28:50.331Z" },
 ]
 
 [[package]]
@@ -2767,15 +2718,6 @@ wheels = [
 ]
 
 [[package]]
-name = "smmap"
-version = "5.0.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/1f/ea/49c993d6dfdd7338c9b1000a0f36817ed7ec84577ae2e52f890d1a4ff909/smmap-5.0.3.tar.gz", hash = "sha256:4d9debb8b99007ae47165abc08670bd74cb74b5227dda7f643eccc4e9eb5642c", size = 22506, upload-time = "2026-03-09T03:43:26.1Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c1/d4/59e74daffcb57a07668852eeeb6035af9f32cbfd7a1d2511f17d2fe6a738/smmap-5.0.3-py3-none-any.whl", hash = "sha256:c106e05d5a61449cf6ba9a1e650227ecfb141590d2a98412103ff35d89fc7b2f", size = 24390, upload-time = "2026-03-09T03:43:24.361Z" },
-]
-
-[[package]]
 name = "sniffio"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2839,22 +2781,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/7a/13/e503968fefabd4c6b2650af21e110aa8466fe21432cd7c43a84577a89438/tensorboard_data_server-0.7.2-py3-none-any.whl", hash = "sha256:7e0610d205889588983836ec05dc098e80f97b7e7bbff7e994ebb78f578d0ddb", size = 2356, upload-time = "2023-10-23T21:23:32.16Z" },
     { url = "https://files.pythonhosted.org/packages/b7/85/dabeaf902892922777492e1d253bb7e1264cadce3cea932f7ff599e53fea/tensorboard_data_server-0.7.2-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:9fe5d24221b29625dbc7328b0436ca7fc1c23de4acf4d272f1180856e32f9f60", size = 4823598, upload-time = "2023-10-23T21:23:33.714Z" },
     { url = "https://files.pythonhosted.org/packages/73/c6/825dab04195756cf8ff2e12698f22513b3db2f64925bdd41671bfb33aaa5/tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl", hash = "sha256:ef687163c24185ae9754ed5650eb5bc4d84ff257aabdc33f0cc6f74d8ba54530", size = 6590363, upload-time = "2023-10-23T21:23:35.583Z" },
-]
-
-[[package]]
-name = "tensordict"
-version = "0.15.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cloudpickle" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "pyvers" },
-    { name = "torch", version = "2.14.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
-    { name = "torch", version = "2.14.1+cu130", source = { registry = "https://download-r2.pytorch.org/whl/cu130" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/c7/f8d00c73aaeb3e9063aa77e15dda98665d2219d4a6001de6291f0b542f46/tensordict-0.15.2-py3-none-any.whl", hash = "sha256:de06ae274e3944fa09988810701fc7f18394bd6da30c2ecfb4d567ea2108b0d8", size = 787612, upload-time = "2026-10-19T18:34:09.992Z" },
 ]
 
 [[package]]
@@ -3035,8 +2961,8 @@ wheels = [
 
 [[package]]
 name = "unilab"
-version = "1.5.2"
-source = { git = "https://github.com/Motphys/UniLab.git?rev=5df76930883889c9bc4ae4ac0edce7555b8c4931#5df76930883889c9bc4ae4ac0edce7555b8c4931" }
+version = "1.5.3"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "etils" },
     { name = "gymnasium" },
@@ -3054,10 +2980,7 @@ dependencies = [
     { name = "packaging" },
     { name = "prettytable" },
     { name = "rich" },
-    { name = "rsl-rl-lib" },
     { name = "setuptools" },
-    { name = "tensorboard" },
-    { name = "tensordict" },
     { name = "torch", version = "2.14.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux' and sys_platform != 'win32'" },
     { name = "torch", version = "2.14.1+cu130", source = { registry = "https://download-r2.pytorch.org/whl/cu130" }, marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
     { name = "tqdm" },
@@ -3065,7 +2988,10 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "unisim-core" },
     { name = "viser" },
-    { name = "wandb" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/72/46/5990352a6fedfa4efce5ac18ee39d3e0cab539bbf28509bb725982347d58/unilab-1.5.3.tar.gz", hash = "sha256:a512d84777d232d69b76fc1fcc9dc84d2b2fc5dff9793fc131d2fde09392b6fc", size = 775500, upload-time = "2026-10-28T17:44:00.835Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/75/efa5693405ff31cfffc4395b41f2d4c81c15216f79ec42e9d345d2a0d109/unilab-1.5.3-py3-none-any.whl", hash = "sha256:c340598fa5bab48e9b2cade24ddff152ca06244a53c29c5c5165a988f4bfbf8e", size = 906859, upload-time = "2026-10-28T17:43:59.116Z" },
 ]
 
 [package.optional-dependencies]
@@ -3080,15 +3006,15 @@ newton = [
 
 [[package]]
 name = "unisim-core"
-version = "2.2.2"
+version = "2.2.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cc/fe/3f347903e34f6c9f1e25c5dd4b803dbd8eb2759fbf1f1b068c9d07a02b33/unisim_core-2.2.2.tar.gz", hash = "sha256:fc4c261a1b1de12ed55097187da0a9f0edd05c544d6bfb326d82439cfde8618c", size = 760538, upload-time = "2026-10-28T14:34:21.551Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/58/435d66797b271a2c6c5cf93967baac4c787bca7f96c8b4c03f03dc86de1a/unisim_core-2.2.4.tar.gz", hash = "sha256:4b9217924036ac6ae1302164565c4d18133bca5249b711142b9d7ffea054fc51", size = 760296, upload-time = "2026-10-29T09:50:43.405Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7d/00/cb04a671fb7db62da5a0c939da84bd3243446c1d44deeb346e44c9931d6f/unisim_core-2.2.2-py3-none-any.whl", hash = "sha256:3bdd5f4dda6dd45dae086f1715ba8674e4f8d3dcb85d9990ecdaec82da5f7470", size = 808869, upload-time = "2026-10-28T14:34:19.338Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/e7/ee08704701b6c76c26c6c6cb8b484c67630d2f5acef037e415ea02b1a088/unisim_core-2.2.4-py3-none-any.whl", hash = "sha256:422cb7030490e28b007a607f0e08b7798aa02968a7c046c23fb91ecdd7f647ac", size = 808628, upload-time = "2026-10-29T09:50:41.397Z" },
 ]
 
 [[package]]

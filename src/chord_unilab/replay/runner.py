@@ -9,7 +9,10 @@ import numpy as np
 import torch
 
 from chord_unilab.assets.compose_sharpa_scene import SharpaSceneAssembly
-from chord_unilab.assets.reference_state import reset_sharpa_scene
+from chord_unilab.assets.reference_state import (
+    reference_public_qpos,
+    reset_sharpa_scene,
+)
 from chord_unilab.data.reference import ChordReference
 from chord_unilab.replay.object_control import (
     object_root_voc,
@@ -220,43 +223,9 @@ class ReplayRunner:
         self._capture(frame)
 
     def _reference_qpos(self, frame: int) -> np.ndarray:
-        qpos = self._qpos_base.copy()
-        for hand in self.assembly.hand_bindings:
-            entity = self.layout.get_entity(hand.entity_name)
-            qpos[list(entity.root_qpos_indices)] = np.concatenate(
-                (
-                    self.reference.wrist_pos_w(hand.side)[frame],
-                    self.reference.wrist_quat_w(hand.side)[frame],
-                )
-            )
-            reference_names = self.reference.finger_joint_names(hand.side)
-            reference_positions = self.reference.finger_joint_pos(hand.side)[frame]
-            joints = {joint.name: joint for joint in entity.joints}
-            for name in hand.joint_names:
-                joint = joints[name]
-                reference_index = reference_names.index(name)
-                qpos[list(joint.qpos_indices)] = reference_positions[reference_index]
-        for binding in self.assembly.bindings:
-            entity = self.layout.get_entity(binding.entity_name)
-            root_index = self.reference.object_body_names().index(
-                binding.spec.root_reference_name
-            )
-            qpos[list(entity.root_qpos_indices)] = np.concatenate(
-                (
-                    self.reference.object_body_pos_w()[frame, root_index],
-                    self.reference.object_body_quat_w()[frame, root_index],
-                )
-            )
-            joints = {joint.name: joint for joint in entity.joints}
-            for articulation, name in zip(
-                binding.spec.articulations, binding.joint_names, strict=True
-            ):
-                qpos[list(joints[name].qpos_indices)] = (
-                    self.reference.object_articulation()[
-                        frame, articulation.reference_index
-                    ]
-                )
-        return qpos
+        return reference_public_qpos(
+            self.reference, self.assembly, self.layout, self._qpos_base, frame
+        )
 
     def _control_targets(self, frame: int) -> None:
         self._ctrl.zero_()

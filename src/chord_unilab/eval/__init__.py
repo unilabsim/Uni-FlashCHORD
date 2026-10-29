@@ -1,1 +1,1 @@
-"""Policy evaluation entry points for CHORD_UniLab."""
+"""Policy evaluation entry points for Uni-FlashCHORD."""

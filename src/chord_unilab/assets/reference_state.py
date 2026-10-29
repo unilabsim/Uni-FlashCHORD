@@ -107,6 +107,53 @@ def reference_state_patch(
     return SceneResetRequest(env_ids=env_ids, patches=tuple(patches))
 
 
+def reference_public_qpos(
+    reference: ChordReference,
+    assembly: SharpaSceneAssembly,
+    layout: Any,
+    base_qpos: np.ndarray,
+    frame: int,
+) -> np.ndarray:
+    """Map one reference frame into the public scene qpos layout."""
+    qpos = np.asarray(base_qpos, dtype=np.float64).copy()
+    if qpos.shape != (layout.nq,):
+        raise ValueError(f"base_qpos shape {qpos.shape}; expected ({layout.nq},)")
+    for hand in assembly.hand_bindings:
+        entity = layout.get_entity(hand.entity_name)
+        qpos[list(entity.root_qpos_indices)] = np.concatenate(
+            (
+                reference.wrist_pos_w(hand.side)[frame],
+                reference.wrist_quat_w(hand.side)[frame],
+            )
+        )
+        reference_names = reference.finger_joint_names(hand.side)
+        reference_positions = reference.finger_joint_pos(hand.side)[frame]
+        joints = {joint.name: joint for joint in entity.joints}
+        for name in hand.joint_names:
+            joint = joints[name]
+            reference_index = reference_names.index(name)
+            qpos[list(joint.qpos_indices)] = reference_positions[reference_index]
+    for binding in assembly.bindings:
+        entity = layout.get_entity(binding.entity_name)
+        root_index = reference.object_body_names().index(
+            binding.spec.root_reference_name
+        )
+        qpos[list(entity.root_qpos_indices)] = np.concatenate(
+            (
+                reference.object_body_pos_w()[frame, root_index],
+                reference.object_body_quat_w()[frame, root_index],
+            )
+        )
+        joints = {joint.name: joint for joint in entity.joints}
+        for articulation, name in zip(
+            binding.spec.articulations, binding.joint_names, strict=True
+        ):
+            qpos[list(joints[name].qpos_indices)] = reference.object_articulation()[
+                frame, articulation.reference_index
+            ]
+    return qpos
+
+
 def reset_sharpa_scene(
     backend: Any,
     reference: ChordReference,

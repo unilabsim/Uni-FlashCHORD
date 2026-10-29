@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
 
-SUPPORTED_CUDA_PROCESS_SHARING_BACKENDS = frozenset({"mjwarp"})
+SUPPORTED_CUDA_PROCESS_SHARING_BACKENDS = frozenset({"mjwarp", "newton"})
 _DEFAULT_PIPE_DIRECTORY = "/tmp/nvidia-mps"
 _MPS_CONTROL_QUERY_TIMEOUT_SEC = 5.0
 
@@ -436,8 +436,8 @@ def probe_cuda_process_sharing(
     normalized_backend = str(backend).strip().lower()
     if normalized_backend not in SUPPORTED_CUDA_PROCESS_SHARING_BACKENDS:
         raise ValueError(
-            "training.cuda_process_sharing='mps' supports only the mjwarp "
-            f"backend in this release; got training.sim_backend={backend!r}."
+            "training.cuda_process_sharing='mps' supports only the mjwarp and "
+            f"newton backends in this release; got training.sim_backend={backend!r}."
         )
     if platform.system() != "Linux":
         raise ValueError(

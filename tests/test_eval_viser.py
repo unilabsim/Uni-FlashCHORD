@@ -1,10 +1,14 @@
 """CHORD eval delegates deterministic playback to UniLab's Viser path."""
 
 from pathlib import Path
+from types import SimpleNamespace
+from typing import Any, cast
 
+import numpy as np
 import pytest
 
 from chord_unilab.eval.viser import compose_viser_config, launch
+from chord_unilab.eval.viser_playback import reference_ghost_model
 
 
 def test_viser_eval_config_loads_checkpoint_without_training() -> None:
@@ -12,7 +16,6 @@ def test_viser_eval_config_loads_checkpoint_without_training() -> None:
         Path("/tmp/chord-eval-parquet"),
         Path("/tmp/chord-eval-model.pt"),
         port=8091,
-        num_envs=2,
     )
     assert config.training.task_name == "SharpaChordFlashSAC"
     assert config.env.scene.reference_path == "/tmp/chord-eval-parquet"
@@ -20,7 +23,7 @@ def test_viser_eval_config_loads_checkpoint_without_training() -> None:
     assert config.training.play_only
     assert not config.training.no_play
     assert config.training.play_render_mode == "viser"
-    assert config.training.play_env_num == 2
+    assert config.training.play_env_num == 1
     assert not config.training.export_onnx
     assert config.env.auto_reset
     assert config.env.commands.reference.always_reset_to_first_frame
@@ -32,18 +35,18 @@ def test_viser_eval_config_loads_checkpoint_without_training() -> None:
     assert config.env.terminations.object_orientation is None
     assert config.env.terminations.reference_end.time_out
     assert "pause_on_done" not in config.viser
-    assert config.viser.display_mode == "all"
-    assert config.viser.max_envs == 2
+    assert config.viser.display_mode == "single"
+    assert config.viser.max_envs == 1
     assert config.viser.port == 8091
 
 
-def test_viser_eval_defaults_to_four_visible_envs() -> None:
+def test_viser_eval_uses_one_visible_environment() -> None:
     config = compose_viser_config(
         Path("/tmp/chord-eval-parquet"), Path("/tmp/chord-eval-model.pt")
     )
-    assert config.training.play_env_num == 4
-    assert config.viser.display_mode == "all"
-    assert config.viser.max_envs == 4
+    assert config.training.play_env_num == 1
+    assert config.viser.display_mode == "single"
+    assert config.viser.max_envs == 1
 
 
 def test_viser_eval_rejects_missing_checkpoint(tmp_path: Path) -> None:
@@ -51,3 +54,33 @@ def test_viser_eval_rejects_missing_checkpoint(tmp_path: Path) -> None:
     parquet.mkdir()
     with pytest.raises(FileNotFoundError, match="checkpoint"):
         launch(parquet, tmp_path / "missing.pt")
+
+
+def test_reference_ghost_model_only_recolors_hands_and_object() -> None:
+    mujoco = pytest.importorskip("mujoco")
+    model = mujoco.MjModel.from_xml_string(
+        """
+        <mujoco>
+          <worldbody>
+            <body name="left_hand/palm"><geom type="box" size="0.1 0.1 0.1"/></body>
+            <body name="tissue/body"><geom type="box" size="0.1 0.1 0.1"/></body>
+            <body name="support/base"><geom type="box" size="0.1 0.1 0.1"/></body>
+          </worldbody>
+        </mujoco>
+        """
+    )
+    assembly = SimpleNamespace(
+        bindings=[SimpleNamespace(bodies={"root": "tissue/body"})]
+    )
+    original_groups = model.geom_group.copy()
+    original_rgba = model.geom_rgba.copy()
+
+    ghost = reference_ghost_model(model, cast(Any, assembly))
+
+    assert ghost is not model
+    assert ghost.geom_group.tolist() == [0, 0, 3]
+    np.testing.assert_allclose(
+        ghost.geom_rgba[:2], np.tile((0.12, 0.95, 0.25, 0.28), (2, 1))
+    )
+    np.testing.assert_array_equal(model.geom_group, original_groups)
+    np.testing.assert_array_equal(model.geom_rgba, original_rgba)

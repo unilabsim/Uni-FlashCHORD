@@ -53,6 +53,8 @@ class ContactTracker:
                         )
                     side_views.append(view)
             self._views.append(side_views)
+        self._refresh_view = env.backend.get_sensor_view
+        self._first_sensor_name = contact_sensor_name(POLICY_SIDES[0], 0, 0)
 
     def read(
         self,
@@ -61,6 +63,7 @@ class ContactTracker:
         object_pos_w: torch.Tensor,
         object_quat_w: torch.Tensor,
     ) -> ContactSlots:
+        self._refresh_view(self._first_sensor_name)
         num_envs = wrist_pos_w.shape[0]
         shape = (num_envs, len(POLICY_SIDES), self.num_bodies, len(CONTACT_LINKS))
         position_w = torch.stack(

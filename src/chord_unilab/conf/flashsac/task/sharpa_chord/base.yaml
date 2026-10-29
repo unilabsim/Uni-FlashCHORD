@@ -10,6 +10,7 @@ env:
     motion_end_frame: -1
     include_support: true
     include_floor: true
+    deferred_contact_publication: false
   sim_dt: 0.01
   ctrl_dt: 0.05
   newton_device: cuda:0

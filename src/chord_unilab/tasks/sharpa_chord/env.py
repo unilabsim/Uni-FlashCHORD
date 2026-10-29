@@ -134,6 +134,10 @@ def make_sharpa_chord_env(
     if not isinstance(left_hand, EntityCfg) or left_hand.root_body_name is None:
         raise ValueError("Sharpa CHORD requires a left_hand root body")
     base_name = left_hand.root_body_name
+    backend_kwargs = env_backend_kwargs(cfg)
+    backend_kwargs["newton_deferred_contact_publication"] = (
+        cfg.scene.deferred_contact_publication
+    )
     backend = create_backend(
         backend_type,
         cfg.scene,
@@ -141,7 +145,7 @@ def make_sharpa_chord_env(
         cfg.sim_dt,
         body_state_required=True,
         base_name=base_name,
-        **env_backend_kwargs(cfg),
+        **backend_kwargs,
     )
     try:
         return SharpaChordEnv(cfg, backend, num_envs)

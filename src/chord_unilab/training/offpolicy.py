@@ -685,7 +685,7 @@ def play_offpolicy(
         # video. Blocks until Ctrl+C. Imported lazily: the viser scene module
         # binds the optional `mujoco` package, which non-MuJoCo-shell training
         # environments do not install.
-        from unilab.visualization.viser_playback import run_viser_playback_from_cfg
+        from chord_unilab.eval.viser_playback import run_viser_playback_from_cfg
 
         run_viser_playback_from_cfg(session, cfg, entrypoint=f"train_{algo_name} play")
         return None
