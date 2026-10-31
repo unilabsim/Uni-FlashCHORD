@@ -16,4 +16,5 @@ wandb/
 !/docs/media/tissue_demo.gif
 !/docs/media/training_comparison.png
 !/docs/media/policy_comparison.gif
+!/docs/media/eval/
 MUJOCO_LOG.TXT

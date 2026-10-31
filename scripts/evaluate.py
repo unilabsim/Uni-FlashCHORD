@@ -13,11 +13,17 @@ def main() -> None:
     parser.add_argument("--parquet", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument(
+        "--hide-reference-ghost",
+        action="store_true",
+        help="Hide the green reference hands and object.",
+    )
     args = parser.parse_args()
     launch(
         args.parquet.expanduser().resolve(),
         args.checkpoint.expanduser().resolve(),
         port=args.port,
+        show_reference_ghost=not args.hide_reference_ghost,
     )
 
 

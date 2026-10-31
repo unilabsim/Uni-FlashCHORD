@@ -2,7 +2,11 @@
 
 **Reference implementation:** [NVIDIA FlashCHORD](https://github.com/nvidia-isaac/video_to_data/tree/main/robotic_grounding/flash_chord) · **Language:** English | [简体中文](README_zh.md)
 
-![Uni-FlashCHORD tissue-box demo](docs/media/tissue_demo.gif)
+<p>
+  <img src="docs/media/eval/tissue.gif" alt="Tissue-box policy rollout" width="33%">
+  <img src="docs/media/eval/pot.gif" alt="Pan-and-spatula policy rollout" width="33%">
+  <img src="docs/media/eval/cup.gif" alt="Cup-pouring policy rollout" width="33%">
+</p>
 
 Uni-FlashCHORD is an independent reproduction of FlashCHORD's dexterous-hand reference retargeting and tracking workflow, built on **UniLab + UniSim Newton**. It loads ManoSharpaData sequences into a floating dual-Sharpa-hand scene, trains reference-tracking policies with FlashSAC, and provides physics replay and checkpoint visualization.
 

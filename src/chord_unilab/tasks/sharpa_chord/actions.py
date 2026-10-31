@@ -336,16 +336,14 @@ class ResidualHandPoseAction(ActionTerm):
         object_quat = object_quat[:, self.object_reference_ids]
         linear_origin = linear_origin[:, self.object_reference_ids]
         angular = angular[:, self.object_reference_ids]
-        force = self.object_mass * (
-            400.0 * (object_target_pos - object_pos) - 40.0 * linear_origin
-        )
-        force = force + self.gravity_w * self.object_mass
+        mass = self.object_mass[None, :, None]
+        inertia = self.object_inertia[None, :, None]
+        force = mass * (400.0 * (object_target_pos - object_pos) - 40.0 * linear_origin)
+        force = force + self.gravity_w * mass
         orientation_error = to_rotvec(
             multiply(object_target_quat, conjugate(object_quat))
         )
-        torque_object = self.object_inertia * (
-            400.0 * orientation_error - 40.0 * angular
-        )
+        torque_object = inertia * (400.0 * orientation_error - 40.0 * angular)
         scale = self.command.applied_voc_scale[:, None, None]
         force = (scale * force).clamp(-200.0, 200.0)
         torque_object = (scale * torque_object).clamp(-50.0, 50.0)

@@ -145,3 +145,42 @@ def test_substep_wrist_child_frame_and_link_origin_voc() -> None:
     expected_force = expected_force.clamp(-200.0, 200.0)
     torch.testing.assert_close(captured["body"][0, 0, :3], expected_force)
     torch.testing.assert_close(captured["body"][0, 0, 3:], torch.zeros(3))
+
+
+def test_substep_voc_broadcasts_mass_and_inertia_per_object() -> None:
+    action = cast(Any, object.__new__(ResidualHandPoseAction))
+    action.cfg = SimpleNamespace(wrist_kp=25.0, wrist_tau_max=45.0)
+    action._env = SimpleNamespace(num_envs=1)
+    action.processed_target = torch.zeros(1, 58)
+    targets = action.processed_target.reshape(1, 2, 29)
+    targets[:, :, 3] = 1.0
+    action.ball_qpos = torch.tensor([[0, 1, 2, 3], [4, 5, 6, 7]])
+    action.object_qvel = torch.empty(0, dtype=torch.int64)
+    action.object_reference_ids = torch.tensor([0, 1])
+    action.object_mass = torch.tensor([2.0, 3.0])
+    action.object_inertia = torch.tensor([4.0, 5.0])
+    action.gravity_w = torch.tensor([0.0, 0.0, 9.81])
+    action.command = SimpleNamespace(applied_voc_scale=torch.ones(1))
+    reference = list(_reference())
+    reference[3] = torch.zeros(1, 2, 3)
+    reference[4] = torch.tensor([1.0, 0.0, 0.0, 0.0]).repeat(1, 2, 1)
+    reference[6] = torch.zeros(1, 2, 6, 3)
+    action.active_reference = tuple(reference)
+    qpos = torch.zeros(1, 8)
+    qpos[:, 0] = 1.0
+    qpos[:, 4] = 1.0
+    object_quat = torch.tensor([1.0, 0.0, 0.0, 0.0]).repeat(1, 2, 1)
+    _, drive, wrench = action._evaluate_forces(
+        qpos,
+        torch.zeros(1, 6),
+        torch.zeros(1, 2, 3),
+        object_quat,
+        torch.zeros(1, 2, 3),
+        torch.zeros(1, 2, 3),
+    )
+    assert drive.shape == (1, 0)
+    torch.testing.assert_close(
+        wrench[..., :3],
+        torch.tensor([0.0, 0.0, 9.81]) * action.object_mass[None, :, None],
+    )
+    torch.testing.assert_close(wrench[..., 3:], torch.zeros(1, 2, 3))

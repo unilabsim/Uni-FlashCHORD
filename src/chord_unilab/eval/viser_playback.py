@@ -58,11 +58,16 @@ class ReferenceGhost:
         reference: ChordReference,
         assembly: SharpaSceneAssembly,
         layout: Any,
+        *,
+        visible: bool = True,
     ) -> None:
+        self._server = server
         self._reference = reference
         self._assembly = assembly
         self._layout = layout
         self._model = reference_ghost_model(model, assembly)
+        self._reference_geoms = self._model.geom_group == 0
+        self._visible = True
         self._data = mujoco.MjData(self._model)
         self._base_qpos = self._data.qpos.copy()
         self._scene = MujocoViserScene(
@@ -71,6 +76,19 @@ class ReferenceGhost:
             name_prefix="/reference/ghost/single",
             render_plane=False,
         )
+        self.set_visible(visible)
+
+    def set_visible(self, visible: bool) -> None:
+        visible = bool(visible)
+        if visible == self._visible:
+            return
+        for geom_index in np.flatnonzero(self._reference_geoms):
+            handle = self._server.scene.get_handle_by_name(
+                f"/reference/ghost/single/geom/{geom_index}"
+            )
+            if handle is not None:
+                handle.visible = visible
+        self._visible = visible
 
     def update(self, frame: int) -> None:
         self._data.qpos[:] = reference_public_qpos(
@@ -87,12 +105,19 @@ class ReferenceGhost:
 def _load_playback_model(env: Any) -> mujoco.MjModel:
     model = env.get_playback_model(0)
     if isinstance(model, mujoco.MjModel):
-        return model
-    if isinstance(model, str):
+        model = copy.deepcopy(model)
+    elif isinstance(model, str):
         if model.lower().endswith(".mjb"):
-            return mujoco.MjModel.from_binary_path(model)
-        return mujoco.MjModel.from_xml_path(model)
-    raise TypeError(f"Expected MuJoCo model or model file path, got {type(model)!r}")
+            model = mujoco.MjModel.from_binary_path(model)
+        else:
+            model = mujoco.MjModel.from_xml_path(model)
+    else:
+        raise TypeError(
+            f"Expected MuJoCo model or model file path, got {type(model)!r}"
+        )
+    collision = (model.geom_contype != 0) | (model.geom_conaffinity != 0)
+    model.geom_group[collision] = 3
+    return model
 
 
 def run_viser_playback(
@@ -101,6 +126,7 @@ def run_viser_playback(
     port: int = 8080,
     start_paused: bool = False,
     speed: float = 1.0,
+    show_reference_ghost: bool = True,
     entrypoint: str = "CHORD Viser playback",
     log: Callable[[str], None] = print,
 ) -> None:
@@ -116,14 +142,24 @@ def run_viser_playback(
     assembly = scene.assembly
 
     server = viser.ViserServer(port=int(port))
+    server.scene.add_grid(
+        "/visual/floor_grid",
+        width=2.0,
+        height=2.0,
+        plane="xy",
+        cell_size=0.1,
+        section_size=0.5,
+        infinite_grid=False,
+        plane_opacity=0.0,
+    )
     with server.gui.add_folder("Controls"):
         pause_button = server.gui.add_button("Pause / Resume")
         step_button = server.gui.add_button("Step")
         speed_slider: Any = server.gui.add_slider(
             "Speed", min=0.1, max=5.0, step=0.1, initial_value=1.0
         )
-        server.gui.add_markdown(
-            "Green translucent meshes show the reference hands and object."
+        show_reference_ghost_control = server.gui.add_checkbox(
+            "Show Reference Ghost", initial_value=bool(show_reference_ghost)
         )
 
     controls = PlaybackControls(paused=bool(start_paused), speed=float(speed))
@@ -133,8 +169,18 @@ def run_viser_playback(
     applier = PhysicsStateApplier(env, model, env_index=0)
     policy_scene = MujocoViserScene(server, model, name_prefix="/mujoco/single")
     ghost = ReferenceGhost(
-        server, model, reference, assembly, env.backend.get_scene_layout()
+        server,
+        model,
+        reference,
+        assembly,
+        env.backend.get_scene_layout(),
+        visible=show_reference_ghost,
     )
+
+    @show_reference_ghost_control.on_update
+    def on_reference_ghost_toggle(event: Any) -> None:
+        del event
+        ghost.set_visible(bool(show_reference_ghost_control.value))
 
     @pause_button.on_click
     def on_pause_click(event: Any) -> None:
@@ -189,6 +235,7 @@ def run_viser_playback_from_cfg(
         port=int(cfg.viser.port),
         start_paused=start_paused,
         speed=speed,
+        show_reference_ghost=bool(cfg.viser.show_reference_ghost),
         entrypoint=entrypoint,
         log=log,
     )

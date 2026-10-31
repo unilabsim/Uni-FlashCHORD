@@ -225,11 +225,14 @@ def test_tissue_compact_critic_probe_declares_ten_context_columns() -> None:
     assert compact_owner.algo.algo_params.compact_critic_replay
 
 
-def test_explicit_eval_starts_unassisted_at_frame_zero() -> None:
+def test_explicit_eval_settles_voc_before_unassisted_reference_play() -> None:
     _require_reference(TISSUE)
     if not torch.cuda.is_available():
         pytest.skip("real Newton eval requires CUDA")
     cfg = compose_viser_config(TISSUE, ROOT / "unused-checkpoint.pt")
+    cfg.env.terminations.wrist_position = None
+    cfg.env.terminations.object_position = None
+    cfg.env.terminations.object_orientation = None
     ensure_registries()
     override = build_offpolicy_play_env_cfg_override("flashsac", cfg, root_dir=ROOT)
     env = create_env(cfg, num_envs=1, env_cfg_override=override)
@@ -238,10 +241,18 @@ def test_explicit_eval_starts_unassisted_at_frame_zero() -> None:
         command = reference_command(cast(Any, env))
         assert command.timestep.item() == 0
         assert command.target_voc_scale.item() == 0.0
+        assert command.applied_voc_scale.item() == 1.0
+        state = env.step(torch.zeros(1, 56, device=env.device))
+        assert command.timestep.item() == 0
+        assert command.steps_since_reset.item() == 1
+        assert command.applied_voc_scale.item() == 1.0
+        for _ in range(19):
+            state = env.step(torch.zeros(1, 56, device=env.device))
+        assert command.timestep.item() == 1
+        assert command.steps_since_reset.item() == 20
         assert command.applied_voc_scale.item() == 0.0
         state = env.step(torch.zeros(1, 56, device=env.device))
-        assert command.timestep.item() == 1
-        assert command.applied_voc_scale.item() == 0.0
+        assert command.timestep.item() == 2
         action = cast(Any, env.action_manager.get_term("residual_hand_pose"))
         assert action.body_force.abs().max().item() == 0.0
         assert not state.terminated.any()

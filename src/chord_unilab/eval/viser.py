@@ -15,6 +15,7 @@ def compose_viser_config(
     checkpoint: Path,
     *,
     port: int = 8080,
+    show_reference_ghost: bool = True,
 ) -> DictConfig:
     overrides = [
         "task=sharpa_chord/newton",
@@ -25,17 +26,16 @@ def compose_viser_config(
         "training.play_render_mode=viser",
         "training.play_env_num=1",
         "training.export_onnx=false",
+        "env.newton_nconmax=512",
         "+env.auto_reset=true",
         "env.commands.reference.always_reset_to_first_frame=true",
         "env.commands.reference.initial_voc_scale=0.0",
-        "env.commands.reference.voc_decay_steps=0",
+        "env.commands.reference.voc_decay_steps=20",
         "env.commands.reference.curriculum_enabled=false",
-        "env.terminations.wrist_position=null",
-        "env.terminations.object_position=null",
-        "env.terminations.object_orientation=null",
         "viser.display_mode=single",
         "viser.max_envs=1",
         f"viser.port={port}",
+        f"viser.show_reference_ghost={str(show_reference_ghost).lower()}",
     ]
     config_resource = resources.files("chord_unilab.conf.flashsac")
     with (
@@ -45,7 +45,13 @@ def compose_viser_config(
         return compose(config_name="config", overrides=overrides)
 
 
-def launch(parquet: Path, checkpoint: Path, *, port: int = 8080) -> None:
+def launch(
+    parquet: Path,
+    checkpoint: Path,
+    *,
+    port: int = 8080,
+    show_reference_ghost: bool = True,
+) -> None:
     if not parquet.exists():
         raise FileNotFoundError(f"CHORD parquet does not exist: {parquet}")
     if not checkpoint.is_file():
@@ -55,4 +61,11 @@ def launch(parquet: Path, checkpoint: Path, *, port: int = 8080) -> None:
 
     from chord_unilab.training.offpolicy import main
 
-    main(compose_viser_config(parquet, checkpoint, port=port))
+    main(
+        compose_viser_config(
+            parquet,
+            checkpoint,
+            port=port,
+            show_reference_ghost=show_reference_ghost,
+        )
+    )

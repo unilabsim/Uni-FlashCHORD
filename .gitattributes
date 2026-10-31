@@ -4,3 +4,5 @@ data/**/*.parquet filter=lfs diff=lfs merge=lfs -text
 data/**/*.urdf filter=lfs diff=lfs merge=lfs -text
 data/**/*.usda filter=lfs diff=lfs merge=lfs -text
 data/**/*.npz filter=lfs diff=lfs merge=lfs -text
+object_assets/**/*.obj filter=lfs diff=lfs merge=lfs -text
+object_assets/**/*.glb filter=lfs diff=lfs merge=lfs -text
