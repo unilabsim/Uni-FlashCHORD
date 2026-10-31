@@ -2,11 +2,13 @@
 
 **原始实现：** [NVIDIA FlashCHORD](https://github.com/nvidia-isaac/video_to_data/tree/main/robotic_grounding/flash_chord) · **语言：** [English](README.md) | 简体中文
 
-<p>
-  <img src="docs/media/eval/tissue.gif" alt="纸巾盒策略回放" width="33%">
-  <img src="docs/media/eval/pot.gif" alt="锅铲策略回放" width="33%">
-  <img src="docs/media/eval/cup.gif" alt="杯子倾倒策略回放" width="33%">
-</p>
+<table width="100%" style="table-layout:fixed">
+  <tr>
+    <td width="33.33%"><img src="docs/media/eval/tissue.gif" alt="纸巾盒策略回放" width="100%"></td>
+    <td width="33.33%"><img src="docs/media/eval/pot.gif" alt="锅铲策略回放" width="100%"></td>
+    <td width="33.33%"><img src="docs/media/eval/cup.gif" alt="杯子倾倒策略回放" width="100%"></td>
+  </tr>
+</table>
 
 Uni-FlashCHORD 是基于 **UniLab + UniSim Newton** 独立复现的 FlashCHORD 灵巧手参考重定向与跟踪项目。它将 ManoSharpaData 参考序列加载到悬浮双 Sharpa 手与物体场景中，使用 FlashSAC 训练参考跟踪策略，并提供物理 replay 和 checkpoint 可视化。
 
