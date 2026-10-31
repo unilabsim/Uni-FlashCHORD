@@ -17,4 +17,5 @@ wandb/
 !/docs/media/training_comparison.png
 !/docs/media/policy_comparison.gif
 !/docs/media/eval/
+/docs/media/eval/*.mp4
 MUJOCO_LOG.TXT
